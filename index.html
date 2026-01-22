@@ -389,93 +389,6 @@
             margin-bottom: 5px;
         }
 
-        .feedback-section {
-            background: #F2F0F6;
-            border-radius: 12px;
-            padding: 18px;
-            margin-top: 20px;
-        }
-
-        .feedback-section h3 {
-            color: #27232F;
-            font-size: 13px;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .feedback-input-group {
-            margin-bottom: 10px;
-        }
-
-        .feedback-input,
-        .feedback-textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #D4D0DD;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
-            background: #FBFAFC;
-            color: #0D0A14;
-            transition: all 0.2s;
-        }
-
-        .feedback-input:focus,
-        .feedback-textarea:focus {
-            outline: none;
-            border-color: #8E62FF;
-            background: white;
-        }
-
-        .feedback-textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .feedback-button {
-            background: #8E62FF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .feedback-button:hover {
-            background: #7B4FE8;
-        }
-
-        .feedback-success {
-            color: #2E7D32;
-            font-size: 13px;
-            margin-top: 10px;
-            padding: 10px;
-            background: #E8F5E9;
-            border-radius: 6px;
-        }
-
-        .export-button {
-            background: transparent;
-            color: #736D7F;
-            border: 1px solid #D4D0DD;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Roboto', sans-serif;
-            margin-top: 12px;
-        }
-
-        .export-button:hover {
-            border-color: #8E62FF;
-            color: #8E62FF;
-        }
-
         @media (max-width: 768px) {
             .calculator {
                 padding: 24px;
@@ -646,22 +559,6 @@
             </ul>
         </div>
 
-        <div class="feedback-section">
-            <h3>Feedback</h3>
-            <form id="feedbackForm">
-                <div class="feedback-input-group">
-                    <input type="text" id="feedbackName" placeholder="Your name (optional)" class="feedback-input">
-                </div>
-                <div class="feedback-input-group">
-                    <textarea id="feedbackText" placeholder="Share your feedback, suggestions, or report issues..." class="feedback-textarea" rows="3"></textarea>
-                </div>
-                <button type="submit" class="feedback-button">Submit Feedback</button>
-            </form>
-            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
-                Thank you for your feedback!
-            </div>
-            <button onclick="exportFeedback()" class="export-button">Export All Feedback</button>
-        </div>
     </div>
 
     <script>
@@ -889,76 +786,6 @@
 
         // Initial calculation
         calculate();
-
-        // Feedback handling
-        const FEEDBACK_KEY = 'lotus_calculator_feedback';
-
-        function getFeedback() {
-            const stored = localStorage.getItem(FEEDBACK_KEY);
-            return stored ? JSON.parse(stored) : [];
-        }
-
-        function saveFeedback(name, text) {
-            const feedback = getFeedback();
-            feedback.push({
-                name: name || 'Anonymous',
-                text: text,
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent
-            });
-            localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
-        }
-
-        function exportFeedbackAsMarkdown() {
-            const feedback = getFeedback();
-            if (feedback.length === 0) return null;
-
-            let md = '# Lotus LP Calculator Feedback\n\n';
-            feedback.forEach((item, index) => {
-                md += `## Feedback ${index + 1}\n`;
-                md += `- **From:** ${item.name}\n`;
-                md += `- **Date:** ${new Date(item.timestamp).toLocaleString()}\n\n`;
-                md += `${item.text}\n\n---\n\n`;
-            });
-            return md;
-        }
-
-        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('feedbackName').value.trim();
-            const text = document.getElementById('feedbackText').value.trim();
-
-            if (!text) return;
-
-            saveFeedback(name, text);
-
-            // Clear form and show success
-            document.getElementById('feedbackName').value = '';
-            document.getElementById('feedbackText').value = '';
-            document.getElementById('feedbackSuccess').style.display = 'block';
-
-            setTimeout(() => {
-                document.getElementById('feedbackSuccess').style.display = 'none';
-            }, 3000);
-        });
-
-        // Export feedback to console for easy access (Ctrl+Shift+J to open console)
-        window.exportFeedback = function() {
-            const md = exportFeedbackAsMarkdown();
-            if (md) {
-                console.log(md);
-                // Also trigger download
-                const blob = new Blob([md], { type: 'text/markdown' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'feedback.md';
-                a.click();
-                URL.revokeObjectURL(url);
-            } else {
-                console.log('No feedback yet.');
-            }
-        };
     </script>
 </body>
 </html>
