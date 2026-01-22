@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotus LP Rewards Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculator {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .input-section {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 4px;
+        }
+
+        .results-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 32px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .results-section h2 {
+            font-size: 22px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .result-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .result-secondary {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-top: 8px;
+        }
+
+        .breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .breakdown-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .breakdown-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .breakdown-value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .info-section {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .info-section h3 {
+            color: #2d3748;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .info-section ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .info-section li {
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 640px) {
+            .calculator {
+                padding: 24px;
+            }
+
+            .breakdown {
+                grid-template-columns: 1fr;
+            }
+
+            .result-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🪷 Lotus LP Rewards Calculator</h1>
+        <p class="subtitle">Calculate your potential LOTUS token earnings</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="lpAmount">Your LP Commitment ($)</label>
+                <input type="number" id="lpAmount" value="15000000" step="100000" min="0">
+                <div class="help-text">Amount you'll provide to the Lotus protocol</div>
+            </div>
+
+            <div class="input-group">
+                <label for="aggressiveness">Your Lending Strategy</label>
+                <select id="aggressiveness">
+                    <option value="conservative">Conservative (5% APR)</option>
+                    <option value="balanced" selected>Balanced (8% APR)</option>
+                    <option value="aggressive">Aggressive (12% APR)</option>
+                </select>
+                <div class="help-text">Expected interest rate based on your risk tolerance</div>
+            </div>
+
+            <div class="input-group">
+                <label for="totalPool">Total Private LP Pool ($)</label>
+                <input type="number" id="totalPool" value="115000000" step="1000000" min="0">
+                <div class="help-text">Total commitments from all private LPs</div>
+            </div>
+
+            <div class="input-group">
+                <label for="marketAPR">Estimated Average Market APR (%)</label>
+                <input type="number" id="marketAPR" value="8" step="0.5" min="0" max="20">
+                <div class="help-text">Average lending rate across all other LPs</div>
+            </div>
+
+            <div class="input-group">
+                <label for="fdv">Target LOTUS FDV ($)</label>
+                <input type="number" id="fdv" value="200000000" step="10000000" min="0">
+                <div class="help-text">Fully Diluted Valuation (100M total supply)</div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2>Your Projected Rewards</h2>
+
+            <div class="result-card">
+                <div class="result-label">Total LOTUS Tokens Earned</div>
+                <div class="result-value" id="totalTokens">-</div>
+                <div class="result-secondary" id="tokenValue">-</div>
+            </div>
+
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Pre-Deposit Phase (2 months)</div>
+                    <div class="breakdown-value" id="preDepositTokens">-</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Post-Launch Phase (6 months)</div>
+                    <div class="breakdown-value" id="postLaunchTokens">-</div>
+                </div>
+            </div>
+
+            <div class="result-card" style="margin-top: 24px;">
+                <div class="result-label">Effective APY (Annualized)</div>
+                <div class="result-value" id="apy">-</div>
+                <div class="result-secondary">Including lending interest + LOTUS rewards</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>Program Details</h3>
+            <ul>
+                <li><strong>Pre-Deposit Phase:</strong> 2 months (4 two-week epochs)</li>
+                <li><strong>Post-Launch Phase:</strong> 6 months (12 two-week epochs)</li>
+                <li><strong>Total Duration:</strong> 8 months commitment</li>
+                <li><strong>Distribution:</strong> Rewards calculated every 2 weeks based on proportional share of interest earned</li>
+                <li><strong>Tiered Rates:</strong> Higher rates for early capital up to $50M, declining rates for larger pools</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Reward schedule (bps per $1M per epoch)
+        const REWARD_SCHEDULE = {
+            preDeposit: [
+                { max: 50000000, rate: 1.7 },
+                { max: 100000000, rate: 1.4 },
+                { max: 200000000, rate: 1.1 },
+                { max: 400000000, rate: 0.86 }
+            ],
+            postLaunch: [
+                { max: 50000000, rate: 4.3 },
+                { max: 100000000, rate: 3.6 },
+                { max: 200000000, rate: 2.9 },
+                { max: 400000000, rate: 2.14 }
+            ]
+        };
+
+        // Aggressiveness mapping (display APR -> calculation APR after RFR)
+        const AGGRESSIVENESS = {
+            conservative: { display: 5, actual: 2 },
+            balanced: { display: 8, actual: 5 },
+            aggressive: { display: 12, actual: 9 }
+        };
+
+        const TOTAL_LOTUS_SUPPLY = 100000000; // 100M
+        const PRE_DEPOSIT_EPOCHS = 4; // 2 months
+        const POST_LAUNCH_EPOCHS = 12; // 6 months
+        const TOTAL_EPOCHS = PRE_DEPOSIT_EPOCHS + POST_LAUNCH_EPOCHS;
+        const WEEKS_PER_EPOCH = 2;
+        const WEEKS_PER_YEAR = 52;
+
+        function calculateTieredAllocation(totalPool, schedule) {
+            let remaining = totalPool;
+            let totalBps = 0;
+
+            for (const tier of schedule) {
+                if (remaining <= 0) break;
+
+                const prevMax = tier === schedule[0] ? 0 : schedule[schedule.indexOf(tier) - 1].max;
+                const tierSize = tier.max - prevMax;
+                const amount = Math.min(remaining, tierSize);
+
+                totalBps += (amount / 1000000) * tier.rate;
+                remaining -= amount;
+            }
+
+            return totalBps; // Returns basis points
+        }
+
+        function calculateInterestPerEpoch(principal, aprPercent) {
+            const annualInterest = principal * (aprPercent / 100);
+            return annualInterest * (WEEKS_PER_EPOCH / WEEKS_PER_YEAR);
+        }
+
+        function formatNumber(num, decimals = 0) {
+            return num.toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        function formatCurrency(num) {
+            return '$' + formatNumber(num, 0);
+        }
+
+        function calculate() {
+            // Get inputs
+            const lpAmount = parseFloat(document.getElementById('lpAmount').value) || 0;
+            const aggressiveness = document.getElementById('aggressiveness').value;
+            const totalPool = parseFloat(document.getElementById('totalPool').value) || 0;
+            const marketAPR = parseFloat(document.getElementById('marketAPR').value) || 8;
+            const fdv = parseFloat(document.getElementById('fdv').value) || 200000000;
+
+            if (lpAmount <= 0 || totalPool <= 0 || lpAmount > totalPool) {
+                document.getElementById('totalTokens').textContent = 'Invalid inputs';
+                document.getElementById('tokenValue').textContent = '';
+                document.getElementById('preDepositTokens').textContent = '-';
+                document.getElementById('postLaunchTokens').textContent = '-';
+                document.getElementById('apy').textContent = '-';
+                return;
+            }
+
+            const tokenPrice = fdv / TOTAL_LOTUS_SUPPLY;
+
+            // Get actual APRs for calculation (after subtracting RFR)
+            const userActualAPR = AGGRESSIVENESS[aggressiveness].actual;
+            const userDisplayAPR = AGGRESSIVENESS[aggressiveness].display;
+
+            // Market APR - subtract 3% RFR for calculation
+            const marketActualAPR = Math.max(0, marketAPR - 3);
+
+            // Calculate total epoch pool allocations
+            const preDepositBps = calculateTieredAllocation(totalPool, REWARD_SCHEDULE.preDeposit);
+            const postLaunchBps = calculateTieredAllocation(totalPool, REWARD_SCHEDULE.postLaunch);
+
+            // Convert bps to LOTUS tokens per epoch
+            const preDepositLotusPerEpoch = (preDepositBps / 100) * TOTAL_LOTUS_SUPPLY / 100;
+            const postLaunchLotusPerEpoch = (postLaunchBps / 100) * TOTAL_LOTUS_SUPPLY / 100;
+
+            // Calculate interest earned per epoch
+            const userInterestPerEpoch = calculateInterestPerEpoch(lpAmount, userActualAPR);
+            const otherPoolAmount = totalPool - lpAmount;
+            const otherInterestPerEpoch = calculateInterestPerEpoch(otherPoolAmount, marketActualAPR);
+            const totalInterestPerEpoch = userInterestPerEpoch + otherInterestPerEpoch;
+
+            // Calculate user's share of interest
+            const userInterestShare = totalInterestPerEpoch > 0
+                ? userInterestPerEpoch / totalInterestPerEpoch
+                : 0;
+
+            // Calculate LOTUS earned per epoch
+            const userPreDepositLotusPerEpoch = preDepositLotusPerEpoch * userInterestShare;
+            const userPostLaunchLotusPerEpoch = postLaunchLotusPerEpoch * userInterestShare;
+
+            // Calculate total LOTUS over all epochs
+            const totalPreDepositLotus = userPreDepositLotusPerEpoch * PRE_DEPOSIT_EPOCHS;
+            const totalPostLaunchLotus = userPostLaunchLotusPerEpoch * POST_LAUNCH_EPOCHS;
+            const totalLotus = totalPreDepositLotus + totalPostLaunchLotus;
+
+            // Calculate value
+            const totalValue = totalLotus * tokenPrice;
+
+            // Calculate APY
+            // Total return = lending interest + LOTUS rewards
+            const totalLendingInterest = calculateInterestPerEpoch(lpAmount, userDisplayAPR) * TOTAL_EPOCHS;
+            const totalReturn = totalLendingInterest + totalValue;
+            const durationYears = (TOTAL_EPOCHS * WEEKS_PER_EPOCH) / WEEKS_PER_YEAR;
+            const simpleReturn = totalReturn / lpAmount;
+            const apy = (Math.pow(1 + simpleReturn, 1 / durationYears) - 1) * 100;
+
+            // Update display
+            document.getElementById('totalTokens').textContent = formatNumber(totalLotus, 0) + ' LOTUS';
+            document.getElementById('tokenValue').textContent = formatCurrency(totalValue) + ' @ ' + tokenPrice.toFixed(2) + ' per token';
+            document.getElementById('preDepositTokens').textContent = formatNumber(totalPreDepositLotus, 0);
+            document.getElementById('postLaunchTokens').textContent = formatNumber(totalPostLaunchLotus, 0);
+            document.getElementById('apy').textContent = apy.toFixed(2) + '%';
+        }
+
+        // Add event listeners
+        document.getElementById('lpAmount').addEventListener('input', calculate);
+        document.getElementById('aggressiveness').addEventListener('change', calculate);
+        document.getElementById('totalPool').addEventListener('input', calculate);
+        document.getElementById('marketAPR').addEventListener('input', calculate);
+        document.getElementById('fdv').addEventListener('input', calculate);
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
