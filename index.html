@@ -591,7 +591,9 @@
         const TOTAL_EPOCHS = PRE_DEPOSIT_EPOCHS + POST_LAUNCH_EPOCHS;
         const WEEKS_PER_EPOCH = 2;
         const WEEKS_PER_YEAR = 52;
-        const DEFAULT_MARKET_APR = 8; // Assumption for other LPs
+        // Market LP distribution: 60% conservative, 30% balanced, 10% aggressive
+        // Weighted APR = 0.60 * 5% + 0.30 * 8% + 0.10 * 12% = 6.6%
+        const DEFAULT_MARKET_APR = 6.6;
 
         let selectedStrategy = 'balanced';
         let rawValues = {
