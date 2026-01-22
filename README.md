@@ -66,21 +66,25 @@ Interactive calculator for showing prospective LPs their potential LOTUS token e
 ### Reward Distribution
 - Rewards are distributed proportionally based on each LP's share of total interest earned
 - More aggressive lending (higher APR) = more interest = larger share of rewards
-- Larger pool sizes use tiered rates (declining rates for capital above $50M)
+- As total pool grows beyond $50M, $100M, $200M thresholds, marginal reward rates decline for additional capital
 
 ### Tiered Rate Schedule
 
+The reward rates apply to tranches of the total pool size. As the pool grows, marginal rates decline:
+
 **Pre-Deposit (bps per $1M per epoch):**
-- $0-50M: 1.7 bps
-- $50-100M: 1.4 bps
-- $100-200M: 1.1 bps
-- $200-400M: 0.86 bps
+- First $50M of pool: 1.7 bps/$1M
+- Next $50M ($50-100M): 1.4 bps/$1M
+- Next $100M ($100-200M): 1.1 bps/$1M
+- Next $200M ($200-400M): 0.86 bps/$1M
 
 **Post-Launch (bps per $1M per epoch):**
-- $0-50M: 4.3 bps
-- $50-100M: 3.6 bps
-- $100-200M: 2.9 bps
-- $200-400M: 2.14 bps
+- First $50M of pool: 4.3 bps/$1M
+- Next $50M ($50-100M): 3.6 bps/$1M
+- Next $100M ($100-200M): 2.9 bps/$1M
+- Next $200M ($200-400M): 2.14 bps/$1M
+
+All LPs share proportionally in the total reward pool based on their contribution to total interest earned.
 
 ### Interest Calculation Notes
 - The calculator uses credit spread (APR minus 3% RFR) for reward distribution
