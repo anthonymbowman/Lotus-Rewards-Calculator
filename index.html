@@ -156,6 +156,26 @@
             text-align: center;
         }
 
+        .slider-container {
+            position: relative;
+            padding-top: 32px;
+            padding-bottom: 8px;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 11px;
+            color: #736D7F;
+            font-weight: 500;
+        }
+
+        .slider-track-wrapper {
+            position: relative;
+            height: 8px;
+        }
+
         .fdv-slider {
             width: 100%;
             height: 8px;
@@ -163,8 +183,10 @@
             background: #D4D0DD;
             outline: none;
             -webkit-appearance: none;
-            margin: 8px 0;
+            margin: 0;
             cursor: pointer;
+            position: relative;
+            z-index: 2;
         }
 
         .fdv-slider::-webkit-slider-thumb {
@@ -177,6 +199,8 @@
             cursor: pointer;
             border: 3px solid white;
             box-shadow: 0 2px 8px rgba(142, 98, 255, 0.4);
+            position: relative;
+            z-index: 3;
         }
 
         .fdv-slider::-moz-range-thumb {
@@ -187,39 +211,59 @@
             cursor: pointer;
             border: 3px solid white;
             box-shadow: 0 2px 8px rgba(142, 98, 255, 0.4);
+            position: relative;
+            z-index: 3;
+        }
+
+        .slider-ticks {
+            position: absolute;
+            top: 0;
+            left: 11px;
+            right: 11px;
+            height: 8px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tick {
+            position: absolute;
+            width: 2px;
+            height: 16px;
+            background: #A385FB;
+            top: -4px;
+            transform: translateX(-50%);
+            border-radius: 1px;
         }
 
         .slider-markers {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 6px;
-            padding: 0;
+            position: absolute;
+            top: -28px;
+            left: 11px;
+            right: 11px;
+            height: 24px;
         }
 
         .marker {
-            font-size: 10px;
-            color: #736D7F;
-            text-align: center;
-            line-height: 1.3;
+            position: absolute;
+            transform: translateX(-50%);
             cursor: pointer;
             transition: all 0.2s;
-            padding: 4px 2px;
-            border-radius: 4px;
+            padding: 2px;
+            border-radius: 50%;
         }
 
         .marker:hover {
-            color: #8E62FF;
-            background: rgba(142, 98, 255, 0.1);
+            transform: translateX(-50%) scale(1.15);
         }
 
-        .marker-name {
-            font-weight: 500;
+        .marker-logo {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
             display: block;
-        }
-
-        .marker-value {
-            font-weight: 300;
-            opacity: 0.8;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
 
         .results-section {
@@ -237,17 +281,27 @@
             font-weight: 500;
         }
 
+        .results-top-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
         .result-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 10px;
             padding: 18px;
-            margin-bottom: 14px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .result-card:last-child {
-            margin-bottom: 0;
+        .result-card.apy-card {
+            min-width: 160px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .result-label {
@@ -335,6 +389,93 @@
             margin-bottom: 5px;
         }
 
+        .feedback-section {
+            background: #F2F0F6;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .feedback-section h3 {
+            color: #27232F;
+            font-size: 13px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .feedback-input-group {
+            margin-bottom: 10px;
+        }
+
+        .feedback-input,
+        .feedback-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #D4D0DD;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+            background: #FBFAFC;
+            color: #0D0A14;
+            transition: all 0.2s;
+        }
+
+        .feedback-input:focus,
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: #8E62FF;
+            background: white;
+        }
+
+        .feedback-textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .feedback-button {
+            background: #8E62FF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .feedback-button:hover {
+            background: #7B4FE8;
+        }
+
+        .feedback-success {
+            color: #2E7D32;
+            font-size: 13px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #E8F5E9;
+            border-radius: 6px;
+        }
+
+        .export-button {
+            background: transparent;
+            color: #736D7F;
+            border: 1px solid #D4D0DD;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Roboto', sans-serif;
+            margin-top: 12px;
+        }
+
+        .export-button:hover {
+            border-color: #8E62FF;
+            color: #8E62FF;
+        }
+
         @media (max-width: 768px) {
             .calculator {
                 padding: 24px;
@@ -360,14 +501,21 @@
                 width: 150px;
             }
 
-            .slider-markers {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 8px;
+            .slider-container {
+                padding-top: 28px;
             }
 
-            .marker {
-                font-size: 9px;
+            .marker-logo {
+                width: 18px;
+                height: 18px;
+            }
+
+            .results-top-row {
+                grid-template-columns: 1fr;
+            }
+
+            .result-card.apy-card {
+                min-width: auto;
             }
         }
     </style>
@@ -398,31 +546,41 @@
                 <div class="input-group full-width">
                     <label>Target LOTUS FDV</label>
                     <div class="fdv-value-display" id="fdvDisplay">$200,000,000</div>
-                    <input type="range" id="fdv" class="fdv-slider"
-                           min="50000000" max="3000000000" value="200000000" step="10000000">
-                    <div class="slider-markers">
-                        <span class="marker" data-value="242000000">
-                            <span class="marker-name">Compound</span>
-                            <span class="marker-value">$242M</span>
-                        </span>
-                        <span class="marker" data-value="410000000">
-                            <span class="marker-name">Maple</span>
-                            <span class="marker-value">$410M</span>
-                        </span>
-                        <span class="marker" data-value="500000000">
-                            <span class="marker-name">Kamino</span>
-                            <span class="marker-value">$500M</span>
-                        </span>
-                        <span class="marker" data-value="1200000000">
-                            <span class="marker-name">Morpho</span>
-                            <span class="marker-value">$1.2B</span>
-                        </span>
-                        <span class="marker" data-value="2500000000">
-                            <span class="marker-name">Aave</span>
-                            <span class="marker-value">$2.5B</span>
-                        </span>
+                    <div class="slider-container">
+                        <div class="slider-labels">
+                            <span>$50M</span>
+                            <span>$3B</span>
+                        </div>
+                        <div class="slider-track-wrapper">
+                            <div class="slider-markers">
+                                <span class="marker" data-value="242000000" style="left: 6.5%;" title="Compound - $242M">
+                                    <img src="https://assets.coingecko.com/coins/images/10775/small/COMP.png" alt="COMP" class="marker-logo">
+                                </span>
+                                <span class="marker" data-value="410000000" style="left: 12.2%;" title="Maple - $410M">
+                                    <img src="https://coin-images.coingecko.com/coins/images/51232/small/_syrup_token_logo.png" alt="SYRUP" class="marker-logo">
+                                </span>
+                                <span class="marker" data-value="500000000" style="left: 15.3%;" title="Kamino - $500M">
+                                    <img src="https://coin-images.coingecko.com/coins/images/35801/small/Kamino_200x200.png" alt="KMNO" class="marker-logo">
+                                </span>
+                                <span class="marker" data-value="1200000000" style="left: 39.0%;" title="Morpho - $1.2B">
+                                    <img src="https://cdn.morpho.org/assets/logos/morpho.svg" alt="MORPHO" class="marker-logo">
+                                </span>
+                                <span class="marker" data-value="2500000000" style="left: 83.1%;" title="Aave - $2.5B">
+                                    <img src="https://assets.coingecko.com/coins/images/12645/small/aave-token-round.png" alt="AAVE" class="marker-logo">
+                                </span>
+                            </div>
+                            <div class="slider-ticks">
+                                <span class="tick" style="left: 6.5%;"></span>
+                                <span class="tick" style="left: 12.2%;"></span>
+                                <span class="tick" style="left: 15.3%;"></span>
+                                <span class="tick" style="left: 39.0%;"></span>
+                                <span class="tick" style="left: 83.1%;"></span>
+                            </div>
+                            <input type="range" id="fdv" class="fdv-slider"
+                                   min="50000000" max="3000000000" value="200000000" step="10000000">
+                        </div>
                     </div>
-                    <div class="help-text">Fully Diluted Valuation (100M total supply) — click protocol names to set</div>
+                    <div class="help-text">Fully Diluted Valuation (100M total supply) — click logos to set benchmark</div>
                 </div>
             </div>
 
@@ -448,11 +606,19 @@
         <div class="results-section">
             <h2>Your Projected Rewards</h2>
 
-            <div class="result-card">
-                <div class="result-label">Total LOTUS Tokens Earned</div>
-                <div class="result-value" id="totalTokens">-</div>
-                <div class="result-secondary" id="tokenValue">-</div>
-                <div class="result-tertiary" id="supplyPercentage">-</div>
+            <div class="results-top-row">
+                <div class="result-card">
+                    <div class="result-label">Total LOTUS Tokens Earned</div>
+                    <div class="result-value" id="totalTokens">-</div>
+                    <div class="result-secondary" id="tokenValue">-</div>
+                    <div class="result-tertiary" id="supplyPercentage">-</div>
+                </div>
+                <div class="result-card apy-card">
+                    <div class="result-label">Effective APY</div>
+                    <div class="result-value" id="apy">-</div>
+                    <div class="result-secondary">Annualized return</div>
+                    <div class="result-tertiary">Lending interest + LOTUS rewards</div>
+                </div>
             </div>
 
             <div class="breakdown">
@@ -467,12 +633,6 @@
                     <div class="breakdown-secondary" id="postLaunchValue">-</div>
                 </div>
             </div>
-
-            <div class="result-card" style="margin-top: 20px;">
-                <div class="result-label">Effective APY (Annualized)</div>
-                <div class="result-value" id="apy">-</div>
-                <div class="result-secondary">Including lending interest + LOTUS rewards</div>
-            </div>
         </div>
 
         <div class="info-section">
@@ -484,6 +644,23 @@
                 <li><strong>Distribution:</strong> Rewards calculated every 2 weeks based on proportional share of interest earned</li>
                 <li><strong>Tiered Rates:</strong> Reward rates decline as total pool size grows beyond $50M, $100M, $200M thresholds</li>
             </ul>
+        </div>
+
+        <div class="feedback-section">
+            <h3>Feedback</h3>
+            <form id="feedbackForm">
+                <div class="feedback-input-group">
+                    <input type="text" id="feedbackName" placeholder="Your name (optional)" class="feedback-input">
+                </div>
+                <div class="feedback-input-group">
+                    <textarea id="feedbackText" placeholder="Share your feedback, suggestions, or report issues..." class="feedback-textarea" rows="3"></textarea>
+                </div>
+                <button type="submit" class="feedback-button">Submit Feedback</button>
+            </form>
+            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
+                Thank you for your feedback!
+            </div>
+            <button onclick="exportFeedback()" class="export-button">Export All Feedback</button>
         </div>
     </div>
 
@@ -712,6 +889,76 @@
 
         // Initial calculation
         calculate();
+
+        // Feedback handling
+        const FEEDBACK_KEY = 'lotus_calculator_feedback';
+
+        function getFeedback() {
+            const stored = localStorage.getItem(FEEDBACK_KEY);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveFeedback(name, text) {
+            const feedback = getFeedback();
+            feedback.push({
+                name: name || 'Anonymous',
+                text: text,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            });
+            localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
+        }
+
+        function exportFeedbackAsMarkdown() {
+            const feedback = getFeedback();
+            if (feedback.length === 0) return null;
+
+            let md = '# Lotus LP Calculator Feedback\n\n';
+            feedback.forEach((item, index) => {
+                md += `## Feedback ${index + 1}\n`;
+                md += `- **From:** ${item.name}\n`;
+                md += `- **Date:** ${new Date(item.timestamp).toLocaleString()}\n\n`;
+                md += `${item.text}\n\n---\n\n`;
+            });
+            return md;
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('feedbackName').value.trim();
+            const text = document.getElementById('feedbackText').value.trim();
+
+            if (!text) return;
+
+            saveFeedback(name, text);
+
+            // Clear form and show success
+            document.getElementById('feedbackName').value = '';
+            document.getElementById('feedbackText').value = '';
+            document.getElementById('feedbackSuccess').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('feedbackSuccess').style.display = 'none';
+            }, 3000);
+        });
+
+        // Export feedback to console for easy access (Ctrl+Shift+J to open console)
+        window.exportFeedback = function() {
+            const md = exportFeedbackAsMarkdown();
+            if (md) {
+                console.log(md);
+                // Also trigger download
+                const blob = new Blob([md], { type: 'text/markdown' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'feedback.md';
+                a.click();
+                URL.revokeObjectURL(url);
+            } else {
+                console.log('No feedback yet.');
+            }
+        };
     </script>
 </body>
 </html>
