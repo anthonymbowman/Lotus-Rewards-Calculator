@@ -86,7 +86,7 @@
             font-size: 13px;
         }
 
-        input {
+        input[type="text"] {
             width: 100%;
             padding: 10px 12px;
             border: 2px solid #D4D0DD;
@@ -98,7 +98,7 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        input:focus {
+        input[type="text"]:focus {
             outline: none;
             border-color: #8E62FF;
             background: white;
@@ -147,6 +147,81 @@
             font-weight: 300;
         }
 
+        /* FDV Slider Styles */
+        .fdv-value-display {
+            font-size: 18px;
+            font-weight: 600;
+            color: #280B55;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .fdv-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #D4D0DD;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        .fdv-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #8E62FF;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(142, 98, 255, 0.4);
+        }
+
+        .fdv-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #8E62FF;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(142, 98, 255, 0.4);
+        }
+
+        .slider-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            padding: 0;
+        }
+
+        .marker {
+            font-size: 10px;
+            color: #736D7F;
+            text-align: center;
+            line-height: 1.3;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 4px 2px;
+            border-radius: 4px;
+        }
+
+        .marker:hover {
+            color: #8E62FF;
+            background: rgba(142, 98, 255, 0.1);
+        }
+
+        .marker-name {
+            font-weight: 500;
+            display: block;
+        }
+
+        .marker-value {
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
         .results-section {
             background: linear-gradient(135deg, #280B55 0%, #5711BE 100%);
             border-radius: 12px;
@@ -192,6 +267,13 @@
             font-size: 15px;
             opacity: 0.85;
             margin-top: 6px;
+            font-weight: 300;
+        }
+
+        .result-tertiary {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-top: 4px;
             font-weight: 300;
         }
 
@@ -277,6 +359,16 @@
             .logo {
                 width: 150px;
             }
+
+            .slider-markers {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .marker {
+                font-size: 9px;
+            }
         }
     </style>
 </head>
@@ -297,19 +389,45 @@
 
                 <div class="input-group">
                     <label for="totalPool">Total Private LP Pool</label>
-                    <input type="text" id="totalPool" value="$115,000,000">
+                    <input type="text" id="totalPool" value="$50,000,000">
                     <div class="help-text">Total commitments from all LPs</div>
                 </div>
             </div>
 
             <div class="input-row">
-                <div class="input-group">
-                    <label for="fdv">Target LOTUS FDV</label>
-                    <input type="text" id="fdv" value="$200,000,000">
-                    <div class="help-text">Fully Diluted Valuation (100M supply)</div>
+                <div class="input-group full-width">
+                    <label>Target LOTUS FDV</label>
+                    <div class="fdv-value-display" id="fdvDisplay">$200,000,000</div>
+                    <input type="range" id="fdv" class="fdv-slider"
+                           min="50000000" max="3000000000" value="200000000" step="10000000">
+                    <div class="slider-markers">
+                        <span class="marker" data-value="242000000">
+                            <span class="marker-name">Compound</span>
+                            <span class="marker-value">$242M</span>
+                        </span>
+                        <span class="marker" data-value="410000000">
+                            <span class="marker-name">Maple</span>
+                            <span class="marker-value">$410M</span>
+                        </span>
+                        <span class="marker" data-value="500000000">
+                            <span class="marker-name">Kamino</span>
+                            <span class="marker-value">$500M</span>
+                        </span>
+                        <span class="marker" data-value="1200000000">
+                            <span class="marker-name">Morpho</span>
+                            <span class="marker-value">$1.2B</span>
+                        </span>
+                        <span class="marker" data-value="2500000000">
+                            <span class="marker-name">Aave</span>
+                            <span class="marker-value">$2.5B</span>
+                        </span>
+                    </div>
+                    <div class="help-text">Fully Diluted Valuation (100M total supply) — click protocol names to set</div>
                 </div>
+            </div>
 
-                <div class="input-group">
+            <div class="input-row">
+                <div class="input-group full-width">
                     <label>Your Lending Strategy</label>
                     <div class="button-group">
                         <button class="strategy-button" data-strategy="conservative">
@@ -334,6 +452,7 @@
                 <div class="result-label">Total LOTUS Tokens Earned</div>
                 <div class="result-value" id="totalTokens">-</div>
                 <div class="result-secondary" id="tokenValue">-</div>
+                <div class="result-tertiary" id="supplyPercentage">-</div>
             </div>
 
             <div class="breakdown">
@@ -403,7 +522,7 @@
         let selectedStrategy = 'balanced';
         let rawValues = {
             lpAmount: 15000000,
-            totalPool: 115000000,
+            totalPool: 50000000,
             fdv: 200000000
         };
 
@@ -451,7 +570,27 @@
 
         setupCurrencyInput('lpAmount', 'lpAmount');
         setupCurrencyInput('totalPool', 'totalPool');
-        setupCurrencyInput('fdv', 'fdv');
+
+        // FDV Slider handlers
+        const fdvSlider = document.getElementById('fdv');
+        const fdvDisplay = document.getElementById('fdvDisplay');
+
+        fdvSlider.addEventListener('input', function() {
+            rawValues.fdv = parseInt(this.value);
+            fdvDisplay.textContent = formatCurrencyInput(rawValues.fdv);
+            calculate();
+        });
+
+        // Marker click handlers
+        document.querySelectorAll('.marker').forEach(marker => {
+            marker.addEventListener('click', function() {
+                const value = parseInt(this.dataset.value);
+                rawValues.fdv = value;
+                fdvSlider.value = value;
+                fdvDisplay.textContent = formatCurrencyInput(value);
+                calculate();
+            });
+        });
 
         function calculateTieredAllocation(totalPool, schedule) {
             let remaining = totalPool;
@@ -495,6 +634,7 @@
             if (lpAmount <= 0 || totalPool <= 0 || lpAmount > totalPool) {
                 document.getElementById('totalTokens').textContent = 'Invalid inputs';
                 document.getElementById('tokenValue').textContent = '';
+                document.getElementById('supplyPercentage').textContent = '';
                 document.getElementById('preDepositTokens').textContent = '-';
                 document.getElementById('preDepositValue').textContent = '-';
                 document.getElementById('postLaunchTokens').textContent = '-';
@@ -548,6 +688,9 @@
             const postLaunchValue = totalPostLaunchLotus * tokenPrice;
             const totalValue = totalLotus * tokenPrice;
 
+            // Calculate % of total supply
+            const supplyPercentage = (totalLotus / TOTAL_LOTUS_SUPPLY) * 100;
+
             // Calculate APY
             // Total return = lending interest + LOTUS rewards
             const totalLendingInterest = calculateInterestPerEpoch(lpAmount, userDisplayAPR) * TOTAL_EPOCHS;
@@ -559,6 +702,7 @@
             // Update display
             document.getElementById('totalTokens').textContent = formatNumber(totalLotus, 0) + ' LOTUS';
             document.getElementById('tokenValue').textContent = formatCurrency(totalValue) + ' @ $' + tokenPrice.toFixed(2) + ' per token';
+            document.getElementById('supplyPercentage').textContent = supplyPercentage.toFixed(2) + '% of total supply';
             document.getElementById('preDepositTokens').textContent = formatNumber(totalPreDepositLotus, 0) + ' LOTUS';
             document.getElementById('preDepositValue').textContent = formatCurrency(preDepositValue);
             document.getElementById('postLaunchTokens').textContent = formatNumber(totalPostLaunchLotus, 0) + ' LOTUS';
