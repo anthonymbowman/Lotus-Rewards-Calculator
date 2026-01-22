@@ -666,6 +666,17 @@
             });
         });
 
+        function getRateForPoolSize(totalPool, schedule) {
+            // Find the rate based on total pool size (all dollars treated equally)
+            for (const tier of schedule) {
+                if (totalPool <= tier.max) {
+                    return tier.rate;
+                }
+            }
+            // If above all tiers, use the last tier's rate
+            return schedule[schedule.length - 1].rate;
+        }
+
         function calculateTieredAllocation(totalPool, schedule) {
             let remaining = totalPool;
             let totalBps = 0;
@@ -726,18 +737,17 @@
             // Market APR - use default assumption, subtract 3% RFR for calculation
             const marketActualAPR = Math.max(0, DEFAULT_MARKET_APR - 3);
 
-            // Calculate total phase pool allocations (these are for ENTIRE PHASE)
-            const preDepositBpsTotal = calculateTieredAllocation(totalPool, REWARD_SCHEDULE.preDeposit);
+            // PRE-DEPOSIT PHASE: All dollars treated equally at the rate for total pool size
+            const preDepositRate = getRateForPoolSize(totalPool, REWARD_SCHEDULE.preDeposit);
+            const userPreDepositBps = (lpAmount / 1000000) * preDepositRate;
+            const totalPreDepositLotus = (userPreDepositBps / 10000) * TOTAL_LOTUS_SUPPLY;
+
+            // POST-LAUNCH PHASE: Uses tiered allocation and interest-based sharing
             const postLaunchBpsTotal = calculateTieredAllocation(totalPool, REWARD_SCHEDULE.postLaunch);
-
-            // Convert bps to LOTUS tokens for ENTIRE PHASE, then divide by epochs for per-epoch amount
-            const preDepositLotusTotal = (preDepositBpsTotal / 100) * TOTAL_LOTUS_SUPPLY / 100;
             const postLaunchLotusTotal = (postLaunchBpsTotal / 100) * TOTAL_LOTUS_SUPPLY / 100;
-
-            const preDepositLotusPerEpoch = preDepositLotusTotal / PRE_DEPOSIT_EPOCHS;
             const postLaunchLotusPerEpoch = postLaunchLotusTotal / POST_LAUNCH_EPOCHS;
 
-            // Calculate interest earned per epoch
+            // Calculate interest earned per epoch for post-launch sharing
             const userInterestPerEpoch = calculateInterestPerEpoch(lpAmount, userActualAPR);
             const otherPoolAmount = totalPool - lpAmount;
             const otherInterestPerEpoch = calculateInterestPerEpoch(otherPoolAmount, marketActualAPR);
@@ -748,12 +758,8 @@
                 ? userInterestPerEpoch / totalInterestPerEpoch
                 : 0;
 
-            // Calculate LOTUS earned per epoch
-            const userPreDepositLotusPerEpoch = preDepositLotusPerEpoch * userInterestShare;
+            // Calculate LOTUS earned for post-launch
             const userPostLaunchLotusPerEpoch = postLaunchLotusPerEpoch * userInterestShare;
-
-            // Calculate total LOTUS over all epochs
-            const totalPreDepositLotus = userPreDepositLotusPerEpoch * PRE_DEPOSIT_EPOCHS;
             const totalPostLaunchLotus = userPostLaunchLotusPerEpoch * POST_LAUNCH_EPOCHS;
             const totalLotus = totalPreDepositLotus + totalPostLaunchLotus;
 
