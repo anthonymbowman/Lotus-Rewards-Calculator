@@ -6,7 +6,7 @@
     <title>Lotus LP Rewards Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,48 +14,71 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --lotus-bg-top: #280b55;
+            --lotus-bg-bottom: #0d0a14;
+            --lotus-surface: #fbfafc;
+            --lotus-surface-alt: #f2f0f6;
+            --lotus-text: #27232f;
+            --lotus-muted: #6d6679;
+            --lotus-border: #d4d0dd;
+            --lotus-accent: #5f36d6;
+            --lotus-accent-soft: #efe9ff;
+            --lotus-danger: #b42318;
+        }
+
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #280B55 0%, #0D0A14 100%);
+            background: linear-gradient(135deg, var(--lotus-bg-top) 0%, var(--lotus-bg-bottom) 100%);
             min-height: 100vh;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            color: var(--lotus-text);
         }
 
         .calculator {
-            background: #FBFAFC;
+            background: var(--lotus-surface);
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            max-width: 900px;
+            box-shadow: 0 14px 36px rgba(10, 8, 20, 0.28);
+            max-width: 1020px;
             width: 100%;
-            padding: 32px;
+            padding: 30px;
             margin-top: 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .logo {
             width: 180px;
             height: auto;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .subtitle {
-            color: #736D7F;
+            color: var(--lotus-muted);
             font-size: 15px;
-            font-weight: 300;
+            font-weight: 500;
         }
 
-        .input-section {
-            background: #F2F0F6;
+        .input-section,
+        .results-section,
+        .summary-section,
+        .explanation-section {
+            background: var(--lotus-surface-alt);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+        }
+
+        h2 {
+            color: #280b55;
+            margin-bottom: 12px;
+            font-size: 20px;
         }
 
         .input-row {
@@ -80,113 +103,103 @@
 
         label {
             display: block;
-            color: #27232F;
-            font-weight: 500;
+            color: var(--lotus-text);
+            font-weight: 700;
             margin-bottom: 6px;
             font-size: 13px;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="number"] {
             width: 100%;
             padding: 10px 12px;
-            border: 2px solid #D4D0DD;
+            border: 2px solid var(--lotus-border);
             border-radius: 8px;
             font-size: 15px;
             transition: all 0.2s;
-            background: #FBFAFC;
-            color: #0D0A14;
+            background: #ffffff;
+            color: #0d0a14;
             font-family: 'Roboto', sans-serif;
         }
 
-        input[type="text"]:focus {
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        .strategy-button:focus,
+        .fdv-slider:focus,
+        details summary:focus {
             outline: none;
-            border-color: #8E62FF;
-            background: white;
+            box-shadow: 0 0 0 3px rgba(95, 54, 214, 0.2);
+        }
+
+        .input-error {
+            border-color: var(--lotus-danger) !important;
+            background: #fff4f3 !important;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: var(--lotus-muted);
+            margin-top: 4px;
+            line-height: 1.35;
         }
 
         .button-group {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
 
         .strategy-button {
             padding: 10px 12px;
-            border: 2px solid #D4D0DD;
+            border: 2px solid var(--lotus-border);
             border-radius: 8px;
-            background: #FBFAFC;
-            color: #27232F;
+            background: #ffffff;
+            color: var(--lotus-text);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             font-family: 'Roboto', sans-serif;
             line-height: 1.3;
-        }
-
-        .strategy-button:hover {
-            border-color: #A385FB;
-            background: #F3F1FF;
-        }
-
-        .strategy-button.active {
-            background: #8E62FF;
-            border-color: #8E62FF;
-            color: white;
-        }
-
-        .strategy-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(142, 98, 255, 0.2);
-        }
-
-        .help-text {
-            font-size: 11px;
-            color: #736D7F;
-            margin-top: 3px;
-            font-weight: 300;
-        }
-
-        /* FDV Slider Styles */
-        .fdv-value-display {
-            font-size: 18px;
-            font-weight: 600;
-            color: #280B55;
-            margin-bottom: 10px;
             text-align: center;
         }
 
-        .slider-container {
-            position: relative;
-            padding-top: 32px;
-            padding-bottom: 8px;
+        .strategy-button:hover {
+            border-color: #a68de8;
+            background: var(--lotus-accent-soft);
+        }
+
+        .strategy-button.active {
+            background: var(--lotus-accent);
+            border-color: var(--lotus-accent);
+            color: #ffffff;
+        }
+
+        .fdv-value-display {
+            font-size: 18px;
+            font-weight: 700;
+            color: #280b55;
+            margin-bottom: 8px;
+            text-align: center;
         }
 
         .slider-labels {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
-            font-size: 11px;
-            color: #736D7F;
-            font-weight: 500;
-        }
-
-        .slider-track-wrapper {
-            position: relative;
-            height: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: var(--lotus-muted);
+            font-weight: 600;
         }
 
         .fdv-slider {
             width: 100%;
             height: 8px;
             border-radius: 4px;
-            background: #D4D0DD;
-            outline: none;
+            background: var(--lotus-border);
             -webkit-appearance: none;
-            margin: 0;
+            appearance: none;
             cursor: pointer;
-            position: relative;
-            z-index: 2;
         }
 
         .fdv-slider::-webkit-slider-thumb {
@@ -195,217 +208,230 @@
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: #8E62FF;
-            cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(142, 98, 255, 0.4);
-            position: relative;
-            z-index: 3;
+            background: var(--lotus-accent);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(95, 54, 214, 0.35);
         }
 
         .fdv-slider::-moz-range-thumb {
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: #8E62FF;
-            cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(142, 98, 255, 0.4);
-            position: relative;
-            z-index: 3;
+            background: var(--lotus-accent);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(95, 54, 214, 0.35);
         }
 
-        .slider-ticks {
-            position: absolute;
-            top: 0;
-            left: 11px;
-            right: 11px;
-            height: 8px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .tick {
-            position: absolute;
-            width: 2px;
-            height: 16px;
-            background: #A385FB;
-            top: -4px;
-            transform: translateX(-50%);
-            border-radius: 1px;
-        }
-
-        .slider-markers {
-            position: absolute;
-            top: -28px;
-            left: 11px;
-            right: 11px;
-            height: 24px;
-        }
-
-        .marker {
-            position: absolute;
-            transform: translateX(-50%);
-            cursor: pointer;
-            transition: all 0.2s;
-            padding: 2px;
-            border-radius: 50%;
-        }
-
-        .marker:hover {
-            transform: translateX(-50%) scale(1.15);
-        }
-
-        .marker-logo {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: block;
-            object-fit: cover;
-            border: 2px solid white;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .results-section {
-            background: linear-gradient(135deg, #280B55 0%, #5711BE 100%);
-            border-radius: 12px;
-            padding: 28px;
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        .results-section h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .results-top-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-
-        .result-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+        .advanced-details {
+            border: 1px solid var(--lotus-border);
             border-radius: 10px;
-            padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            padding: 10px 12px;
         }
 
-        .result-card.apy-card {
-            min-width: 160px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .result-label {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-bottom: 6px;
-            font-weight: 400;
-        }
-
-        .result-value {
-            font-size: 32px;
-            font-weight: 600;
-            line-height: 1.1;
-        }
-
-        .result-secondary {
-            font-size: 15px;
-            opacity: 0.85;
-            margin-top: 6px;
-            font-weight: 300;
-        }
-
-        .result-tertiary {
+        .advanced-details summary {
+            cursor: pointer;
             font-size: 13px;
-            opacity: 0.7;
-            margin-top: 4px;
-            font-weight: 300;
+            font-weight: 700;
+            color: var(--lotus-text);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .breakdown {
+        .advanced-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .advanced-details summary::after {
+            content: '+';
+            font-size: 18px;
+            color: var(--lotus-accent);
+            line-height: 1;
+            margin-left: 8px;
+        }
+
+        .advanced-details[open] summary::after {
+            content: '−';
+        }
+
+        .advanced-content {
+            margin-top: 10px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-top: 20px;
+            gap: 12px;
+            border-top: 1px solid #e7e3ee;
+            padding-top: 10px;
         }
 
-        .breakdown-item {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .breakdown-label {
-            font-size: 11px;
-            opacity: 0.9;
-            margin-bottom: 6px;
-            font-weight: 400;
-        }
-
-        .breakdown-value {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .breakdown-secondary {
+        .validation-message {
+            margin-top: 10px;
+            color: var(--lotus-danger);
+            font-weight: 700;
             font-size: 13px;
-            opacity: 0.75;
-            font-weight: 300;
+            min-height: 18px;
         }
 
-        .info-section {
-            background: #F2F0F6;
-            border-radius: 12px;
-            padding: 18px;
-            font-size: 12px;
-            color: #554F63;
-            line-height: 1.6;
-        }
-
-        .info-section h3 {
-            color: #27232F;
-            font-size: 13px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .info-section ul {
-            margin-left: 18px;
+        .note {
             margin-top: 6px;
+            font-size: 13px;
+            color: var(--lotus-muted);
+            min-height: 18px;
+            line-height: 1.4;
         }
 
-        .info-section li {
-            margin-bottom: 5px;
+        .phase-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .phase-card,
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #e8e4f1;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .phase-card h3,
+        .summary-card h3 {
+            color: #280b55;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .phase-value,
+        .summary-value {
+            color: #1d1a25;
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .metric-list {
+            display: grid;
+            gap: 6px;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            border-top: 1px dashed #ddd8e9;
+            padding-top: 6px;
+            align-items: baseline;
+        }
+
+        .metric-item span {
+            color: var(--lotus-muted);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .metric-item strong {
+            color: var(--lotus-text);
+            font-size: 15px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .summary-stat {
+            background: #f8f6fc;
+            border: 1px solid #ece8f4;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .summary-stat-label {
+            color: var(--lotus-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+
+        .summary-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--lotus-text);
+        }
+
+        .program-details {
+            border: 1px solid var(--lotus-border);
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 10px 12px;
+        }
+
+        .program-details summary {
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--lotus-text);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .program-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .program-details summary::after {
+            content: '+';
+            font-size: 18px;
+            color: var(--lotus-accent);
+            line-height: 1;
+            margin-left: 8px;
+        }
+
+        .program-details[open] summary::after {
+            content: '−';
+        }
+
+        .program-content {
+            margin-top: 10px;
+            border-top: 1px solid #e7e3ee;
+            padding-top: 10px;
+        }
+
+        .program-content p,
+        .program-content li {
+            font-size: 13px;
+            line-height: 1.45;
+            color: var(--lotus-text);
+        }
+
+        .program-content ul {
+            margin-left: 18px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 960px) {
+            .phase-panels,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
             .calculator {
-                padding: 24px;
+                padding: 22px;
             }
 
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-
-            .breakdown {
-                grid-template-columns: 1fr;
-            }
-
-            .result-value {
-                font-size: 26px;
-            }
-
+            .input-row,
+            .advanced-content,
             .button-group {
                 grid-template-columns: 1fr;
             }
@@ -414,21 +440,9 @@
                 width: 150px;
             }
 
-            .slider-container {
-                padding-top: 28px;
-            }
-
-            .marker-logo {
-                width: 18px;
-                height: 18px;
-            }
-
-            .results-top-row {
-                grid-template-columns: 1fr;
-            }
-
-            .result-card.apy-card {
-                min-width: auto;
+            .phase-value,
+            .summary-value {
+                font-size: 25px;
             }
         }
     </style>
@@ -437,63 +451,36 @@
     <div class="calculator">
         <div class="header">
             <img src="Lotus-logo-dark (1).png" alt="Lotus" class="logo">
-            <p class="subtitle">LP Rewards Calculator</p>
+            <p class="subtitle">Private LP Rewards Calculator</p>
         </div>
 
-        <div class="input-section">
+        <section class="input-section">
+            <h2>Inputs</h2>
+
             <div class="input-row">
                 <div class="input-group">
                     <label for="lpAmount">Your LP Commitment</label>
-                    <input type="text" id="lpAmount" value="$15,000,000">
-                    <div class="help-text">Amount you'll provide to Lotus</div>
+                    <input type="text" id="lpAmount" value="$15,000,000" inputmode="numeric">
+                    <div class="help-text">Amount your LP allocates to the private LP program.</div>
                 </div>
 
                 <div class="input-group">
-                    <label for="totalPool">Total Private LP Pool</label>
-                    <input type="text" id="totalPool" value="$50,000,000">
-                    <div class="help-text">Total commitments from all LPs</div>
+                    <label for="totalPool">Total Private LP Supply</label>
+                    <input type="text" id="totalPool" value="$115,000,000" inputmode="numeric">
+                    <div class="help-text">Total committed private LP capital used for bracket selection.</div>
                 </div>
             </div>
 
             <div class="input-row">
                 <div class="input-group full-width">
-                    <label>Target LOTUS FDV</label>
+                    <label for="fdv">Target LOTUS FDV</label>
                     <div class="fdv-value-display" id="fdvDisplay">$200,000,000</div>
-                    <div class="slider-container">
-                        <div class="slider-labels">
-                            <span>$50M</span>
-                            <span>$3B</span>
-                        </div>
-                        <div class="slider-track-wrapper">
-                            <div class="slider-markers">
-                                <span class="marker" data-value="242000000" style="left: 6.5%;" title="Compound - $242M">
-                                    <img src="https://assets.coingecko.com/coins/images/10775/small/COMP.png" alt="COMP" class="marker-logo">
-                                </span>
-                                <span class="marker" data-value="410000000" style="left: 12.2%;" title="Maple - $410M">
-                                    <img src="https://coin-images.coingecko.com/coins/images/51232/small/_syrup_token_logo.png" alt="SYRUP" class="marker-logo">
-                                </span>
-                                <span class="marker" data-value="500000000" style="left: 15.3%;" title="Kamino - $500M">
-                                    <img src="https://coin-images.coingecko.com/coins/images/35801/small/Kamino_200x200.png" alt="KMNO" class="marker-logo">
-                                </span>
-                                <span class="marker" data-value="1200000000" style="left: 39.0%;" title="Morpho - $1.2B">
-                                    <img src="https://cdn.morpho.org/assets/logos/morpho.svg" alt="MORPHO" class="marker-logo">
-                                </span>
-                                <span class="marker" data-value="2500000000" style="left: 83.1%;" title="Aave - $2.5B">
-                                    <img src="https://assets.coingecko.com/coins/images/12645/small/aave-token-round.png" alt="AAVE" class="marker-logo">
-                                </span>
-                            </div>
-                            <div class="slider-ticks">
-                                <span class="tick" style="left: 6.5%;"></span>
-                                <span class="tick" style="left: 12.2%;"></span>
-                                <span class="tick" style="left: 15.3%;"></span>
-                                <span class="tick" style="left: 39.0%;"></span>
-                                <span class="tick" style="left: 83.1%;"></span>
-                            </div>
-                            <input type="range" id="fdv" class="fdv-slider"
-                                   min="50000000" max="3000000000" value="200000000" step="10000000">
-                        </div>
+                    <div class="slider-labels">
+                        <span>$50M</span>
+                        <span>$3B</span>
                     </div>
-                    <div class="help-text">Fully Diluted Valuation (100M total supply) — click logos to set benchmark</div>
+                    <input type="range" id="fdv" class="fdv-slider" min="50000000" max="3000000000" value="200000000" step="10000000">
+                    <div class="help-text">Used to convert token rewards into USD value at an implied token price.</div>
                 </div>
             </div>
 
@@ -501,206 +488,173 @@
                 <div class="input-group full-width">
                     <label>Your Lending Strategy</label>
                     <div class="button-group">
-                        <button class="strategy-button" data-strategy="conservative">
-                            Conservative<br><span style="font-size: 11px; opacity: 0.8;">5% APR</span>
+                        <button class="strategy-button" data-strategy="conservative" type="button">
+                            Conservative<br><span style="font-size: 11px; opacity: 0.9;">5% APR</span>
                         </button>
-                        <button class="strategy-button active" data-strategy="balanced">
-                            Balanced<br><span style="font-size: 11px; opacity: 0.8;">8% APR</span>
+                        <button class="strategy-button active" data-strategy="balanced" type="button">
+                            Balanced<br><span style="font-size: 11px; opacity: 0.9;">8% APR</span>
                         </button>
-                        <button class="strategy-button" data-strategy="aggressive">
-                            Aggressive<br><span style="font-size: 11px; opacity: 0.8;">12% APR</span>
+                        <button class="strategy-button" data-strategy="aggressive" type="button">
+                            Aggressive<br><span style="font-size: 11px; opacity: 0.9;">12% APR</span>
                         </button>
                     </div>
-                    <div class="help-text">Expected rate based on risk tolerance</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="results-section">
-            <h2>Your Projected Rewards</h2>
-
-            <div class="results-top-row">
-                <div class="result-card">
-                    <div class="result-label">Total LOTUS Tokens Earned</div>
-                    <div class="result-value" id="totalTokens">-</div>
-                    <div class="result-secondary" id="tokenValue">-</div>
-                    <div class="result-tertiary" id="supplyPercentage">-</div>
-                </div>
-                <div class="result-card apy-card">
-                    <div class="result-label">Effective APY</div>
-                    <div class="result-value" id="apy">-</div>
-                    <div class="result-secondary">Annualized return</div>
-                    <div class="result-tertiary">Lending interest + LOTUS rewards</div>
+                    <div class="help-text">Used for post-launch spread-interest sharing and post-launch APY.</div>
                 </div>
             </div>
 
-            <div class="breakdown">
-                <div class="breakdown-item">
-                    <div class="breakdown-label">Pre-Deposit Phase (2 months)</div>
-                    <div class="breakdown-value" id="preDepositTokens">-</div>
-                    <div class="breakdown-secondary" id="preDepositValue">-</div>
-                </div>
-                <div class="breakdown-item">
-                    <div class="breakdown-label">Post-Launch Phase (6 months)</div>
-                    <div class="breakdown-value" id="postLaunchTokens">-</div>
-                    <div class="breakdown-secondary" id="postLaunchValue">-</div>
+            <div class="input-row">
+                <div class="input-group full-width">
+                    <details class="advanced-details">
+                        <summary>Advanced assumptions</summary>
+                        <div class="advanced-content">
+                            <div class="input-group">
+                                <label for="marketAPR">Estimated Average Market APR (%)</label>
+                                <input type="number" id="marketAPR" value="6.6" min="0" step="0.1">
+                                <div class="help-text">Assumed average APR for other LPs in post-launch calculations.</div>
+                            </div>
+                            <div class="input-group">
+                                <label for="baseRate">Base Rate / RFR (%)</label>
+                                <input type="number" id="baseRate" value="3.0" min="0" step="0.1">
+                                <div class="help-text">Used to calculate post-launch spread-interest sharing (APR less base rate).</div>
+                            </div>
+                        </div>
+                    </details>
                 </div>
             </div>
-        </div>
 
-        <div class="info-section">
-            <h3>Program Details</h3>
-            <ul>
-                <li><strong>Pre-Deposit Phase:</strong> 2 months (4 two-week epochs)</li>
-                <li><strong>Post-Launch Phase:</strong> 6 months (12 two-week epochs)</li>
-                <li><strong>Total Duration:</strong> 8 months commitment</li>
-                <li><strong>Distribution:</strong> Rewards calculated every 2 weeks based on proportional share of interest earned</li>
-                <li><strong>Tiered Rates:</strong> Reward rates decline as total pool size grows beyond $50M, $100M, $200M thresholds</li>
-            </ul>
-        </div>
+            <div class="validation-message" id="validationMessage"></div>
+            <div class="note" id="poolRateNote"></div>
+        </section>
 
+        <section class="results-section">
+            <h2>Phase Rewards</h2>
+            <div class="phase-panels">
+                <article class="phase-card">
+                    <h3>Pre-Deposit Phase (4 epochs)</h3>
+                    <div class="phase-value" id="preValueMain">-</div>
+                    <div class="metric-list">
+                        <div class="metric-item">
+                            <span>Lotus Tokens</span>
+                            <strong id="preTokens">-</strong>
+                        </div>
+                        <div class="metric-item">
+                            <span>Base APY</span>
+                            <strong id="preBaseApy">-</strong>
+                        </div>
+                        <div class="metric-item">
+                            <span>Incentive APY</span>
+                            <strong id="preIncentiveApy">-</strong>
+                        </div>
+                        <div class="metric-item">
+                            <span>Total APY</span>
+                            <strong id="preTotalApy">-</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase-card">
+                    <h3>Post-Launch Phase (13 epochs)</h3>
+                    <div class="phase-value" id="postValueMain">-</div>
+                    <div class="metric-list">
+                        <div class="metric-item">
+                            <span>Lotus Tokens</span>
+                            <strong id="postTokens">-</strong>
+                        </div>
+                        <div class="metric-item">
+                            <span>Base APY</span>
+                            <strong id="postBaseApy">-</strong>
+                        </div>
+                        <div class="metric-item">
+                            <span>Incentive APY</span>
+                            <strong id="postIncentiveApy">-</strong>
+                        </div>
+                        <div class="metric-item">
+                            <span>Total APY</span>
+                            <strong id="postTotalApy">-</strong>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="summary-section">
+            <h2>Total Rewards Summary</h2>
+            <div class="summary-card">
+                <div class="summary-value" id="totalValueMain">-</div>
+                <div class="summary-grid">
+                    <div class="summary-stat">
+                        <div class="summary-stat-label">Total LOTUS Tokens</div>
+                        <div class="summary-stat-value" id="totalTokens">-</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-label">Full Program APY</div>
+                        <div class="summary-stat-value" id="totalApy">-</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-label">Implied Token Price</div>
+                        <div class="summary-stat-value" id="tokenPrice">-</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="explanation-section">
+            <h2>Private LP Rewards Program</h2>
+            <details class="program-details">
+                <summary>View program explanation</summary>
+                <div class="program-content">
+                    <p>
+                        The private LP program has two reward phases and distributes rewards every two weeks.
+                        Your estimated rewards depend on your commitment size, total private LP pool size, and
+                        expected market conditions.
+                    </p>
+                    <ul>
+                        <li><strong>Pre-Deposit:</strong> rewards are allocated based on your share of the private LP pool.</li>
+                        <li><strong>Post-Launch:</strong> rewards are allocated based on your share of spread-interest earned.</li>
+                        <li><strong>Base APY:</strong> underlying yield assumption for the phase (pre-deposit fixed at 3.75%).</li>
+                        <li><strong>Incentive APY:</strong> annualized value of Lotus token rewards for that phase.</li>
+                        <li><strong>Total APY:</strong> Base APY plus Incentive APY.</li>
+                    </ul>
+                </div>
+            </details>
+        </section>
     </div>
 
     <script>
-        // Reward schedule (bps per $1M for ENTIRE PHASE, not per epoch)
         const REWARD_SCHEDULE = {
             preDeposit: [
-                { max: 50000000, rate: 1.7 },
-                { max: 100000000, rate: 1.4 },
-                { max: 200000000, rate: 1.1 },
-                { max: 400000000, rate: 0.86 }
+                { max: 50000000, rate: 0.4250 },
+                { max: 100000000, rate: 0.3500 },
+                { max: 200000000, rate: 0.2750 }
             ],
             postLaunch: [
-                { max: 50000000, rate: 4.3 },
-                { max: 100000000, rate: 3.6 },
-                { max: 200000000, rate: 2.9 },
-                { max: 400000000, rate: 2.14 }
+                { max: 50000000, rate: 0.3310 },
+                { max: 100000000, rate: 0.2770 },
+                { max: 200000000, rate: 0.2230 }
             ]
         };
 
-        // Aggressiveness mapping (display APR -> calculation APR after RFR)
         const AGGRESSIVENESS = {
-            conservative: { display: 5, actual: 2 },
-            balanced: { display: 8, actual: 5 },
-            aggressive: { display: 12, actual: 9 }
+            conservative: { display: 5 },
+            balanced: { display: 8 },
+            aggressive: { display: 12 }
         };
 
-        const TOTAL_LOTUS_SUPPLY = 100000000; // 100M
-        const PRE_DEPOSIT_EPOCHS = 4; // 2 months
-        const POST_LAUNCH_EPOCHS = 12; // 6 months
-        const TOTAL_EPOCHS = PRE_DEPOSIT_EPOCHS + POST_LAUNCH_EPOCHS;
+        const TOTAL_LOTUS_SUPPLY = 100000000;
         const WEEKS_PER_EPOCH = 2;
         const WEEKS_PER_YEAR = 52;
-        // Market LP distribution: 60% conservative, 30% balanced, 10% aggressive
-        // Weighted APR = 0.60 * 5% + 0.30 * 8% + 0.10 * 12% = 6.6%
-        const DEFAULT_MARKET_APR = 6.6;
+        const PRE_DEPOSIT_EPOCHS = 4;
+        const POST_LAUNCH_EPOCHS = 13;
+        const PRE_DEPOSIT_BASE_APY = 3.75;
 
         let selectedStrategy = 'balanced';
         let rawValues = {
             lpAmount: 15000000,
-            totalPool: 50000000,
-            fdv: 200000000
+            totalPool: 115000000,
+            fdv: 200000000,
+            marketAPR: 6.6,
+            baseRate: 3.0
         };
-
-        // Strategy button handlers
-        document.querySelectorAll('.strategy-button').forEach(button => {
-            button.addEventListener('click', function() {
-                document.querySelectorAll('.strategy-button').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                selectedStrategy = this.dataset.strategy;
-                calculate();
-            });
-        });
-
-        // Currency input formatting
-        function formatCurrencyInput(value) {
-            const num = typeof value === 'number' ? value : parseFloat(value);
-            if (isNaN(num)) return '$0';
-            return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
-        }
-
-        function parseCurrencyInput(value) {
-            return parseFloat(value.replace(/[$,]/g, '')) || 0;
-        }
-
-        function setupCurrencyInput(inputId, key) {
-            const input = document.getElementById(inputId);
-
-            input.addEventListener('focus', function() {
-                this.value = rawValues[key].toString();
-                this.select();
-            });
-
-            input.addEventListener('blur', function() {
-                rawValues[key] = parseCurrencyInput(this.value);
-                this.value = formatCurrencyInput(rawValues[key]);
-                calculate();
-            });
-
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    this.blur();
-                }
-            });
-        }
-
-        setupCurrencyInput('lpAmount', 'lpAmount');
-        setupCurrencyInput('totalPool', 'totalPool');
-
-        // FDV Slider handlers
-        const fdvSlider = document.getElementById('fdv');
-        const fdvDisplay = document.getElementById('fdvDisplay');
-
-        fdvSlider.addEventListener('input', function() {
-            rawValues.fdv = parseInt(this.value);
-            fdvDisplay.textContent = formatCurrencyInput(rawValues.fdv);
-            calculate();
-        });
-
-        // Marker click handlers
-        document.querySelectorAll('.marker').forEach(marker => {
-            marker.addEventListener('click', function() {
-                const value = parseInt(this.dataset.value);
-                rawValues.fdv = value;
-                fdvSlider.value = value;
-                fdvDisplay.textContent = formatCurrencyInput(value);
-                calculate();
-            });
-        });
-
-        function getRateForPoolSize(totalPool, schedule) {
-            // Find the rate based on total pool size (all dollars treated equally)
-            for (const tier of schedule) {
-                if (totalPool <= tier.max) {
-                    return tier.rate;
-                }
-            }
-            // If above all tiers, use the last tier's rate
-            return schedule[schedule.length - 1].rate;
-        }
-
-        function calculateTieredAllocation(totalPool, schedule) {
-            let remaining = totalPool;
-            let totalBps = 0;
-
-            for (const tier of schedule) {
-                if (remaining <= 0) break;
-
-                const prevMax = tier === schedule[0] ? 0 : schedule[schedule.indexOf(tier) - 1].max;
-                const tierSize = tier.max - prevMax;
-                const amount = Math.min(remaining, tierSize);
-
-                totalBps += (amount / 1000000) * tier.rate;
-                remaining -= amount;
-            }
-
-            return totalBps; // Returns basis points for ENTIRE PHASE
-        }
-
-        function calculateInterestPerEpoch(principal, aprPercent) {
-            const annualInterest = principal * (aprPercent / 100);
-            return annualInterest * (WEEKS_PER_EPOCH / WEEKS_PER_YEAR);
-        }
 
         function formatNumber(num, decimals = 0) {
             return num.toLocaleString('en-US', {
@@ -709,90 +663,306 @@
             });
         }
 
-        function formatCurrency(num) {
-            return '$' + formatNumber(num, 0);
+        function formatCurrencyInput(value) {
+            return '$' + formatNumber(value, 0);
+        }
+
+        function formatCurrency(value) {
+            return '$' + formatNumber(value, 0);
+        }
+
+        function parseCurrencyInput(value) {
+            return parseFloat(value.replace(/[$,]/g, ''));
+        }
+
+        function setupStrategyButtons() {
+            document.querySelectorAll('.strategy-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.strategy-button').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedStrategy = this.dataset.strategy;
+                    calculate();
+                });
+            });
+        }
+
+        function setupCurrencyInput(inputId, key) {
+            const input = document.getElementById(inputId);
+            input.value = formatCurrencyInput(rawValues[key]);
+
+            input.addEventListener('focus', function() {
+                this.value = rawValues[key].toString();
+                this.select();
+            });
+
+            input.addEventListener('blur', function() {
+                const parsed = parseCurrencyInput(this.value);
+                rawValues[key] = Number.isFinite(parsed) ? parsed : NaN;
+                this.value = Number.isFinite(rawValues[key]) ? formatCurrencyInput(rawValues[key]) : this.value;
+                calculate();
+            });
+
+            input.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    this.blur();
+                }
+            });
+        }
+
+        function setupPercentInput(inputId, key) {
+            const input = document.getElementById(inputId);
+            input.value = rawValues[key].toFixed(1);
+
+            input.addEventListener('input', function() {
+                rawValues[key] = parseFloat(this.value);
+                calculate();
+            });
+
+            input.addEventListener('blur', function() {
+                if (Number.isFinite(rawValues[key])) {
+                    this.value = rawValues[key].toFixed(1);
+                }
+            });
+        }
+
+        function setupFdvSlider() {
+            const slider = document.getElementById('fdv');
+            const display = document.getElementById('fdvDisplay');
+
+            slider.value = String(rawValues.fdv);
+            display.textContent = formatCurrencyInput(rawValues.fdv);
+
+            slider.addEventListener('input', function() {
+                rawValues.fdv = parseInt(this.value, 10);
+                display.textContent = formatCurrencyInput(rawValues.fdv);
+                calculate();
+            });
+        }
+
+        function getBracketRate(totalPool, schedule) {
+            for (const tier of schedule) {
+                if (totalPool <= tier.max) {
+                    return tier.rate;
+                }
+            }
+            return schedule[schedule.length - 1].rate;
+        }
+
+        function calculatePoolEpoch(totalPool, schedule) {
+            const rate = getBracketRate(totalPool, schedule);
+            const poolEpochBps = (totalPool / 1000000) * rate;
+            const poolEpochTokens = (poolEpochBps / 10000) * TOTAL_LOTUS_SUPPLY;
+
+            return {
+                rate,
+                poolEpochBps,
+                poolEpochTokens
+            };
+        }
+
+        function calculatePreDeposit(inputs) {
+            const durationYears = (PRE_DEPOSIT_EPOCHS * WEEKS_PER_EPOCH) / WEEKS_PER_YEAR;
+            const poolEpoch = calculatePoolEpoch(inputs.totalPool, REWARD_SCHEDULE.preDeposit);
+            const userShare = inputs.lpAmount / inputs.totalPool;
+            const epochTokens = poolEpoch.poolEpochTokens * userShare;
+            const tokens = epochTokens * PRE_DEPOSIT_EPOCHS;
+            const valueUSD = tokens * inputs.tokenPrice;
+
+            const baseApy = PRE_DEPOSIT_BASE_APY;
+            const incentiveApy = (valueUSD / inputs.lpAmount) / durationYears * 100;
+            const totalApy = baseApy + incentiveApy;
+            const lendingInterest = inputs.lpAmount * (baseApy / 100) * durationYears;
+
+            return {
+                tokens,
+                valueUSD,
+                baseApy,
+                incentiveApy,
+                totalApy,
+                userShare,
+                lendingInterest
+            };
+        }
+
+        function calculatePostLaunch(inputs) {
+            const durationYears = (POST_LAUNCH_EPOCHS * WEEKS_PER_EPOCH) / WEEKS_PER_YEAR;
+            const poolEpoch = calculatePoolEpoch(inputs.totalPool, REWARD_SCHEDULE.postLaunch);
+
+            const userSpreadAPR = Math.max(0, inputs.strategyAPR - inputs.baseRate);
+            const marketSpreadAPR = Math.max(0, inputs.marketAPR - inputs.baseRate);
+
+            const userInterestEpoch = inputs.lpAmount * (userSpreadAPR / 100) * (WEEKS_PER_EPOCH / WEEKS_PER_YEAR);
+            const otherInterestEpoch = (inputs.totalPool - inputs.lpAmount) * (marketSpreadAPR / 100) * (WEEKS_PER_EPOCH / WEEKS_PER_YEAR);
+            const totalInterestEpoch = userInterestEpoch + otherInterestEpoch;
+
+            const userShare = totalInterestEpoch > 0 ? (userInterestEpoch / totalInterestEpoch) : 0;
+            const epochTokens = poolEpoch.poolEpochTokens * userShare;
+            const tokens = epochTokens * POST_LAUNCH_EPOCHS;
+            const valueUSD = tokens * inputs.tokenPrice;
+
+            const baseApy = inputs.strategyAPR;
+            const incentiveApy = (valueUSD / inputs.lpAmount) / durationYears * 100;
+            const totalApy = baseApy + incentiveApy;
+            const lendingInterest = inputs.lpAmount * (baseApy / 100) * durationYears;
+
+            return {
+                tokens,
+                valueUSD,
+                baseApy,
+                incentiveApy,
+                totalApy,
+                userShare,
+                lendingInterest
+            };
+        }
+
+        function calculateFullProgram(inputs, preResult, postResult) {
+            const totalTokens = preResult.tokens + postResult.tokens;
+            const totalValueUSD = preResult.valueUSD + postResult.valueUSD;
+            const totalDurationYears = ((PRE_DEPOSIT_EPOCHS + POST_LAUNCH_EPOCHS) * WEEKS_PER_EPOCH) / WEEKS_PER_YEAR;
+
+            const totalLendingInterest = preResult.lendingInterest + postResult.lendingInterest;
+            const totalReturn = (totalLendingInterest + totalValueUSD) / inputs.lpAmount;
+            const totalAPY = (Math.pow(1 + totalReturn, 1 / totalDurationYears) - 1) * 100;
+
+            return {
+                totalTokens,
+                totalValueUSD,
+                totalAPY
+            };
+        }
+
+        function clearInputErrors() {
+            ['lpAmount', 'totalPool', 'fdv', 'marketAPR', 'baseRate'].forEach(id => {
+                const node = document.getElementById(id);
+                if (node) {
+                    node.classList.remove('input-error');
+                }
+            });
+        }
+
+        function applyInputErrors(fieldIds) {
+            clearInputErrors();
+            fieldIds.forEach(id => {
+                const node = document.getElementById(id);
+                if (node) {
+                    node.classList.add('input-error');
+                }
+            });
+        }
+
+        function validateInputs() {
+            const invalidFields = [];
+
+            if (!Number.isFinite(rawValues.lpAmount) || rawValues.lpAmount <= 0) {
+                invalidFields.push('lpAmount');
+                return { message: 'Your LP commitment must be greater than 0.', invalidFields };
+            }
+            if (!Number.isFinite(rawValues.totalPool) || rawValues.totalPool <= 0) {
+                invalidFields.push('totalPool');
+                return { message: 'Total private LP supply must be greater than 0.', invalidFields };
+            }
+            if (rawValues.lpAmount > rawValues.totalPool) {
+                invalidFields.push('lpAmount', 'totalPool');
+                return { message: 'Your LP commitment cannot exceed total private LP supply.', invalidFields };
+            }
+            if (!Number.isFinite(rawValues.fdv) || rawValues.fdv <= 0) {
+                invalidFields.push('fdv');
+                return { message: 'Target LOTUS FDV must be greater than 0.', invalidFields };
+            }
+            if (!Number.isFinite(rawValues.marketAPR) || rawValues.marketAPR < 0) {
+                invalidFields.push('marketAPR');
+                return { message: 'Estimated average market APR must be 0 or higher.', invalidFields };
+            }
+            if (!Number.isFinite(rawValues.baseRate) || rawValues.baseRate < 0) {
+                invalidFields.push('baseRate');
+                return { message: 'Base rate / RFR must be 0 or higher.', invalidFields };
+            }
+
+            return { message: '', invalidFields };
+        }
+
+        function setEmptyOutput() {
+            document.getElementById('preValueMain').textContent = '-';
+            document.getElementById('preTokens').textContent = '-';
+            document.getElementById('preBaseApy').textContent = '-';
+            document.getElementById('preIncentiveApy').textContent = '-';
+            document.getElementById('preTotalApy').textContent = '-';
+
+            document.getElementById('postValueMain').textContent = '-';
+            document.getElementById('postTokens').textContent = '-';
+            document.getElementById('postBaseApy').textContent = '-';
+            document.getElementById('postIncentiveApy').textContent = '-';
+            document.getElementById('postTotalApy').textContent = '-';
+
+            document.getElementById('totalValueMain').textContent = '-';
+            document.getElementById('totalTokens').textContent = '-';
+            document.getElementById('totalApy').textContent = '-';
+            document.getElementById('tokenPrice').textContent = '-';
+
+            document.getElementById('poolRateNote').textContent = '';
         }
 
         function calculate() {
-            const lpAmount = rawValues.lpAmount;
-            const totalPool = rawValues.totalPool;
-            const fdv = rawValues.fdv;
+            const validation = validateInputs();
+            const validationElement = document.getElementById('validationMessage');
 
-            if (lpAmount <= 0 || totalPool <= 0 || lpAmount > totalPool) {
-                document.getElementById('totalTokens').textContent = 'Invalid inputs';
-                document.getElementById('tokenValue').textContent = '';
-                document.getElementById('supplyPercentage').textContent = '';
-                document.getElementById('preDepositTokens').textContent = '-';
-                document.getElementById('preDepositValue').textContent = '-';
-                document.getElementById('postLaunchTokens').textContent = '-';
-                document.getElementById('postLaunchValue').textContent = '-';
-                document.getElementById('apy').textContent = '-';
+            applyInputErrors(validation.invalidFields);
+
+            if (validation.message) {
+                validationElement.textContent = validation.message;
+                setEmptyOutput();
                 return;
             }
 
-            const tokenPrice = fdv / TOTAL_LOTUS_SUPPLY;
+            validationElement.textContent = '';
 
-            // Get actual APRs for calculation (after subtracting RFR)
-            const userActualAPR = AGGRESSIVENESS[selectedStrategy].actual;
-            const userDisplayAPR = AGGRESSIVENESS[selectedStrategy].display;
+            const tokenPrice = rawValues.fdv / TOTAL_LOTUS_SUPPLY;
+            const strategyAPR = AGGRESSIVENESS[selectedStrategy].display;
 
-            // Market APR - use default assumption, subtract 3% RFR for calculation
-            const marketActualAPR = Math.max(0, DEFAULT_MARKET_APR - 3);
+            const inputs = {
+                lpAmount: rawValues.lpAmount,
+                totalPool: rawValues.totalPool,
+                tokenPrice,
+                strategyAPR,
+                marketAPR: rawValues.marketAPR,
+                baseRate: rawValues.baseRate
+            };
 
-            // PRE-DEPOSIT PHASE: All dollars treated equally at the rate for total pool size
-            const preDepositRate = getRateForPoolSize(totalPool, REWARD_SCHEDULE.preDeposit);
-            const userPreDepositBps = (lpAmount / 1000000) * preDepositRate;
-            const totalPreDepositLotus = (userPreDepositBps / 10000) * TOTAL_LOTUS_SUPPLY;
+            const preResult = calculatePreDeposit(inputs);
+            const postResult = calculatePostLaunch(inputs);
+            const fullProgram = calculateFullProgram(inputs, preResult, postResult);
 
-            // POST-LAUNCH PHASE: Uses tiered allocation and interest-based sharing
-            const postLaunchBpsTotal = calculateTieredAllocation(totalPool, REWARD_SCHEDULE.postLaunch);
-            const postLaunchLotusTotal = (postLaunchBpsTotal / 100) * TOTAL_LOTUS_SUPPLY / 100;
-            const postLaunchLotusPerEpoch = postLaunchLotusTotal / POST_LAUNCH_EPOCHS;
+            document.getElementById('preValueMain').textContent = formatCurrency(preResult.valueUSD);
+            document.getElementById('preTokens').textContent = formatNumber(preResult.tokens, 0) + ' LOTUS';
+            document.getElementById('preBaseApy').textContent = preResult.baseApy.toFixed(2) + '%';
+            document.getElementById('preIncentiveApy').textContent = preResult.incentiveApy.toFixed(2) + '%';
+            document.getElementById('preTotalApy').textContent = preResult.totalApy.toFixed(2) + '%';
 
-            // Calculate interest earned per epoch for post-launch sharing
-            const userInterestPerEpoch = calculateInterestPerEpoch(lpAmount, userActualAPR);
-            const otherPoolAmount = totalPool - lpAmount;
-            const otherInterestPerEpoch = calculateInterestPerEpoch(otherPoolAmount, marketActualAPR);
-            const totalInterestPerEpoch = userInterestPerEpoch + otherInterestPerEpoch;
+            document.getElementById('postValueMain').textContent = formatCurrency(postResult.valueUSD);
+            document.getElementById('postTokens').textContent = formatNumber(postResult.tokens, 0) + ' LOTUS';
+            document.getElementById('postBaseApy').textContent = postResult.baseApy.toFixed(2) + '%';
+            document.getElementById('postIncentiveApy').textContent = postResult.incentiveApy.toFixed(2) + '%';
+            document.getElementById('postTotalApy').textContent = postResult.totalApy.toFixed(2) + '%';
 
-            // Calculate user's share of interest
-            const userInterestShare = totalInterestPerEpoch > 0
-                ? userInterestPerEpoch / totalInterestPerEpoch
-                : 0;
+            document.getElementById('totalValueMain').textContent = formatCurrency(fullProgram.totalValueUSD);
+            document.getElementById('totalTokens').textContent = formatNumber(fullProgram.totalTokens, 0) + ' LOTUS';
+            document.getElementById('totalApy').textContent = fullProgram.totalAPY.toFixed(2) + '%';
+            document.getElementById('tokenPrice').textContent = '$' + tokenPrice.toFixed(2);
 
-            // Calculate LOTUS earned for post-launch
-            const userPostLaunchLotusPerEpoch = postLaunchLotusPerEpoch * userInterestShare;
-            const totalPostLaunchLotus = userPostLaunchLotusPerEpoch * POST_LAUNCH_EPOCHS;
-            const totalLotus = totalPreDepositLotus + totalPostLaunchLotus;
-
-            // Calculate values
-            const preDepositValue = totalPreDepositLotus * tokenPrice;
-            const postLaunchValue = totalPostLaunchLotus * tokenPrice;
-            const totalValue = totalLotus * tokenPrice;
-
-            // Calculate % of total supply
-            const supplyPercentage = (totalLotus / TOTAL_LOTUS_SUPPLY) * 100;
-
-            // Calculate APY
-            // Total return = lending interest + LOTUS rewards
-            const totalLendingInterest = calculateInterestPerEpoch(lpAmount, userDisplayAPR) * TOTAL_EPOCHS;
-            const totalReturn = totalLendingInterest + totalValue;
-            const durationYears = (TOTAL_EPOCHS * WEEKS_PER_EPOCH) / WEEKS_PER_YEAR;
-            const simpleReturn = totalReturn / lpAmount;
-            const apy = (Math.pow(1 + simpleReturn, 1 / durationYears) - 1) * 100;
-
-            // Update display
-            document.getElementById('totalTokens').textContent = formatNumber(totalLotus, 0) + ' LOTUS';
-            document.getElementById('tokenValue').textContent = formatCurrency(totalValue) + ' @ $' + tokenPrice.toFixed(2) + ' per token';
-            document.getElementById('supplyPercentage').textContent = supplyPercentage.toFixed(2) + '% of total supply';
-            document.getElementById('preDepositTokens').textContent = formatNumber(totalPreDepositLotus, 0) + ' LOTUS';
-            document.getElementById('preDepositValue').textContent = formatCurrency(preDepositValue);
-            document.getElementById('postLaunchTokens').textContent = formatNumber(totalPostLaunchLotus, 0) + ' LOTUS';
-            document.getElementById('postLaunchValue').textContent = formatCurrency(postLaunchValue);
-            document.getElementById('apy').textContent = apy.toFixed(2) + '%';
+            if (rawValues.totalPool > 200000000) {
+                document.getElementById('poolRateNote').textContent = 'Note: private LP schedule is published through $200M. For higher pools this estimator uses the 100-200M bracket rate.';
+            } else {
+                document.getElementById('poolRateNote').textContent = '';
+            }
         }
 
-        // Initial calculation
+        setupStrategyButtons();
+        setupCurrencyInput('lpAmount', 'lpAmount');
+        setupCurrencyInput('totalPool', 'totalPool');
+        setupPercentInput('marketAPR', 'marketAPR');
+        setupPercentInput('baseRate', 'baseRate');
+        setupFdvSlider();
         calculate();
     </script>
 </body>

@@ -1,138 +1,87 @@
 # Lotus LP Rewards Calculator
 
-Interactive calculator for showing prospective LPs their potential LOTUS token earnings.
+Interactive calculator for showing private LPs their estimated LOTUS rewards using the current assumptions in `Lotus Incentives Plan.md`.
 
 ## Quick Start
 
-1. Open `lotus-lp-calculator.html` in any web browser (Chrome, Firefox, Safari, etc.)
-2. No installation or internet connection required - it's a single self-contained file
-3. Adjust the inputs to show prospects their potential returns
+1. Open `index.html` in any modern browser.
+2. No install step is required; this is a single self-contained page.
+3. Use the phase toggle, inputs, and assumptions to model rewards.
 
-## How to Use
+## What Changed
 
-### Inputs
+- Added a phase toggle: **Pre-Deposit Vaults** vs **Post-Launch**.
+- Added an in-page LP program explainer at the top of the calculator.
+- Added post-launch advanced assumptions (collapsible):
+  - `Estimated Average Market APR (%)`
+  - `Base Rate / RFR (%)`
+- Added a selected-phase output view plus a compact full-program summary.
 
-**Your LP Commitment ($)**
-- The amount the prospect will provide to Lotus
-- Default: $15M
+## Inputs
 
-**Your Lending Strategy**
-- Conservative (5% APR): Lower risk, lower returns
-- Balanced (8% APR): Medium risk, medium returns
-- Aggressive (12% APR): Higher risk, higher returns
-- Default: Balanced
+### Available in both phases
 
-**Total Private LP Pool ($)**
-- Total commitments from all private LPs combined
-- This affects the reward tiers and distribution
-- Default: $115M
+- **Your LP Commitment**
+- **Total Private LP Supply**
+- **Target LOTUS FDV**
 
-**Estimated Average Market APR (%)**
-- The expected average lending rate across all other LPs
-- Used to calculate the prospect's share of rewards
-- Default: 8%
+### Post-launch only
 
-**Target LOTUS FDV ($)**
-- The projected Fully Diluted Valuation of LOTUS tokens
-- Used to calculate USD value of token rewards
-- 100M total token supply
-- Default: $200M ($2.00 per token)
+- **Your Lending Strategy** (Conservative / Balanced / Aggressive)
+- **Advanced assumptions** (collapsible)
+  - Market APR (default `6.6%`)
+  - Base Rate / RFR (default `3.0%`)
 
-### Outputs
+## MD-Aligned Reward Schedule
 
-**Total LOTUS Tokens Earned**
-- Total tokens over the 8-month commitment period
-- Shows USD value at the target FDV
+Source: `Lotus Incentives Plan.md`
 
-**Pre-Deposit Phase vs Post-Launch Phase**
-- Breakdown of tokens earned in each phase
-- Pre-deposit: 2 months (4 two-week epochs)
-- Post-launch: 6 months (12 two-week epochs)
+- **Epoch length:** 2 weeks
+- **Pre-Deposit:** 4 epochs
+- **Post-Launch:** 13 epochs
+- **Total program horizon for summary:** 17 epochs
 
-**Effective APY**
-- Annualized return including both:
-  - Lending interest earned
-  - LOTUS token rewards
-- Helps compare to other DeFi opportunities
+### Pre-Deposit rates (bp per $1M per epoch)
 
-## Key Details
+- `0-50M`: `0.4250`
+- `50-100M`: `0.3500`
+- `100-200M`: `0.2750`
 
-### Program Structure
-- **Duration:** 8 months total commitment
-- **Pre-Deposit Phase:** 2 months before market launch
-- **Post-Launch Phase:** 6 months after market launch
-- **Distribution:** Every 2 weeks (epoch-based)
+### Post-Launch rates (bp per $1M per epoch)
 
-### Reward Distribution
-- Rewards are distributed proportionally based on each LP's share of total interest earned
-- More aggressive lending (higher APR) = more interest = larger share of rewards
-- As total pool grows beyond $50M, $100M, $200M thresholds, marginal reward rates decline for additional capital
+- `0-50M`: `0.3310`
+- `50-100M`: `0.2770`
+- `100-200M`: `0.2230`
 
-### Tiered Rate Schedule
+## Assumptions
 
-The reward rates apply to tranches of the total pool size. As the pool grows, marginal rates decline:
+- The calculator uses a **flat bracket rate by total pool size** for each phase.
+- Pre-deposit rewards are split by LP share of total private pool.
+- Post-launch rewards are split by LP share of spread interest (APR minus base rate).
+- Selected-phase APY is phase-specific.
+- Full-program APY combines both phases (4 + 13 epochs).
+- If total private LP supply is above `$200M`, the estimator uses the last published bracket rate (`100-200M`) until a newer schedule is provided.
 
-**Pre-Deposit (bps per $1M per epoch):**
-- First $50M of pool: 1.7 bps/$1M
-- Next $50M ($50-100M): 1.4 bps/$1M
-- Next $100M ($100-200M): 1.1 bps/$1M
-- Next $200M ($200-400M): 0.86 bps/$1M
+## Validation Rules
 
-**Post-Launch (bps per $1M per epoch):**
-- First $50M of pool: 4.3 bps/$1M
-- Next $50M ($50-100M): 3.6 bps/$1M
-- Next $100M ($100-200M): 2.9 bps/$1M
-- Next $200M ($200-400M): 2.14 bps/$1M
-
-All LPs share proportionally in the total reward pool based on their contribution to total interest earned.
-
-### Interest Calculation Notes
-- The calculator uses credit spread (APR minus 3% RFR) for reward distribution
-- Display shows full APR for simplicity
-- Conservative 5% → 2% credit spread
-- Balanced 8% → 5% credit spread
-- Aggressive 12% → 9% credit spread
-
-## Example Scenarios
-
-### Scenario 1: $15M LP, Conservative Strategy
-- LP Amount: $15M
-- Strategy: Conservative (5% APR)
-- Total Pool: $115M
-- Market APR: 8%
-- FDV: $200M
-
-**Result:** ~3.2M LOTUS tokens (~$6.4M value), ~85% APY
-
-### Scenario 2: $50M LP, Aggressive Strategy
-- LP Amount: $50M
-- Strategy: Aggressive (12% APR)
-- Total Pool: $200M
-- Market APR: 8%
-- FDV: $200M
-
-**Result:** Higher token earnings due to larger size and more aggressive lending
-
-## Tips for BD Presentations
-
-1. **Start with default values** to show a baseline scenario
-2. **Adjust LP amount** to match the prospect's capacity
-3. **Show different strategies** to demonstrate how aggressiveness affects returns
-4. **Vary the FDV** to show upside/downside scenarios
-5. **Highlight the APY** as the key comparison metric
+- `lpAmount > 0`
+- `totalPool > 0`
+- `lpAmount <= totalPool`
+- `fdv > 0`
+- `marketAPR >= 0`
+- `baseRate >= 0`
 
 ## Testing
 
-Run `node test-calculations.js` to verify the calculation logic with multiple test scenarios.
+Run:
 
-## Technical Notes
+```bash
+node test-calculations.js
+```
 
-- Single-file HTML/CSS/JavaScript application
-- No external dependencies
-- Works offline
-- Compatible with all modern browsers
-- Updates calculations in real-time as inputs change
+The test script verifies MD example alignment and key invariants, including:
 
----
-
-For questions or updates to the reward schedule, contact the Lotus team.
+- Pre-deposit `$40M` example -> `17 bp` pool reward per epoch
+- Post-launch LP1-style `$115M` scenario around `0.26%` total supply over 13 epochs
+- Full total equals pre + post totals
+- Share and spread-floor edge cases
